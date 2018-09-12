@@ -114,9 +114,8 @@ def fgsm_attack():
         model = InceptionModel(num_classes)
         probs = model(x_input)
 
-        for i in range(3):
-            fgsm = FastGradientMethod(model)
-            x_adv = fgsm.generate(x_input, eps=eps, clip_min=-1., clip_max=1.)
+        fgsm = FastGradientMethod(model)
+        x_adv = fgsm.generate(x_input, eps=eps, clip_min=-1., clip_max=1.)
 
         # Run computation
         saver = tf.train.Saver(slim.get_model_variables())
@@ -127,7 +126,7 @@ def fgsm_attack():
 
         with tf.train.MonitoredSession(session_creator=session_creator) as sess:
             for filenames, images in load_images(os.path.join(module_dir,FLAGS.input_dir), batch_shape):
-                for i in range(20):
+                for i in range(3):
                     if i == 0:
                         adv_images = sess.run(x_adv, feed_dict={x_input: images})
                     else:
